@@ -15,26 +15,28 @@ contract cityPoll {
     address owner;
     uint256 public cityCount = 0; // number of city added
     constructor() public {
-    
-    //TODO set contract caller as owner
-    //TODO set some intitial cities.
+    owner = msg.sender;
+    addCity("Butwal");
     }
  
  
-    function addCity() public {
-      //  TODO: add city to the CityStruct
+    function addCity(string memory _cityName) public {
+      require(msg.sender == owner, "Access Denied");
+      cities[cityCount].cityName = _cityName;
+      cityCount++;
 
     }
     
-    function voteCity() public {
-        
-        //TODO Vote the selected city through cityID
+    function voteCity(uint256 _id) public {
+        require(!hasVoted[msg.sender], "Already Voted");
+        cities[_id].vote ++;
+        hasVoted[msg.sender] = true;
 
     }
-    function getCity() public view returns (string memory) {
-     // TODO get the city details through cityID
+    function getCity(uint256 _id) public view returns (string memory) {
+     return cities[_id].cityName;
     }
     function getVote() public view returns (uint256) {
-    // TODO get the vote of the city with its ID
+        return cities[_id].vote;
     }
 }
